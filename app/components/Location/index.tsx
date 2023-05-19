@@ -1,15 +1,8 @@
-import {
-  Text,
-  TouchableOpacity,
-  View,
-  StyleSheet,
-  ActivityIndicator,
-} from 'react-native';
-import React, {useState, useEffect} from 'react';
-import {getDistance} from 'geolib';
-import {useToast} from 'react-native-toast-notifications';
-import dayjs from 'dayjs';
 import axios from 'axios';
+import {getDistance} from 'geolib';
+import React, {useState} from 'react';
+import {useToast} from 'react-native-toast-notifications';
+import {Button, Text, Spinner, Alert, HStack} from 'native-base';
 
 interface LocationProp {
   latitude: number;
@@ -23,7 +16,6 @@ const LocationInfo = ({latitude, longitude}: LocationProp) => {
 
   const [todayAttendance, setTodayAttendance] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [ip, setIp] = useState(0);
 
   const fetchUserIp = async () =>
     await axios
@@ -37,87 +29,88 @@ const LocationInfo = ({latitude, longitude}: LocationProp) => {
       });
 
   const onMarkAttendance = async () => {
+    let id = toast.show('Wait we are marking attendance.', {
+      type: 'warning',
+      placement: 'top',
+      duration: 4000,
+      animationType: 'slide-in',
+    });
+
     setLoading(true);
     const ip = await fetchUserIp();
 
     if (ip === '223.178.212.19') {
-      setTimeout(() => {
-        toast.show('Attendance for today is marked.', {
-          type: 'success',
-          placement: 'top',
-          duration: 4000,
-          animationType: 'slide-in',
-        });
-        setTodayAttendance(true);
-        setLoading(false);
-      }, 3000);
+      setTodayAttendance(true);
+      setLoading(false);
+      toast.update(id, 'Attendance for today is marked.', {
+        type: 'success',
+      });
     } else {
-      toast.show('You are not connected to company wifi.', {
+      toast.update(id, 'You are not connected to company wifi.', {
         type: 'danger',
-        placement: 'top',
-        duration: 4000,
-        animationType: 'slide-in',
       });
       setLoading(false);
     }
   };
 
-  return (
-    <View>
-      {getDistance(location1, location2) / 1000 < 0.5 && !todayAttendance ? (
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginVertical: 30,
-          }}>
-          <Text
-            style={{
-              fontWeight: 'bold',
-              fontSize: 20,
-              marginRight: 20,
-            }}>
-            Mark attendance
-          </Text>
-          {!loading ? (
-            <TouchableOpacity style={styles.button} onPress={onMarkAttendance}>
-              <Text style={styles.textButton}>Present</Text>
-            </TouchableOpacity>
-          ) : (
-            <ActivityIndicator size="large" />
-          )}
-        </View>
-      ) : todayAttendance ? (
-        <Text style={{fontWeight: 'bold', fontSize: 20, marginVertical: 15}}>
-          {`${dayjs().format('DD-MMMM-YYYY')} : Present`}
-        </Text>
+  return getDistance(location1, location2) / 1000 < 0.5 && !todayAttendance ? (
+    <HStack alignItems="center" my={5}>
+      <Alert mr={3} status="error">
+        you have not marked attendance yet.
+      </Alert>
+      {!loading ? (
+        <Button
+          size="md"
+          backgroundColor="#F2796B"
+          rounded="lg"
+          onPress={onMarkAttendance}>
+          Mark
+        </Button>
       ) : (
-        <Text style={{fontWeight: 'bold', fontSize: 20, marginVertical: 15}}>
-          You are far away from office for marking attendance.
-        </Text>
+        <Spinner size="lg" color="#F2796B" />
       )}
-    </View>
+    </HStack>
+  ) : todayAttendance ? (
+    <Alert status="success">
+      <HStack flexShrink={1} space={2} alignItems="center">
+        <Alert.Icon />
+        <Text fontSize="md" fontWeight="medium" color="coolGray.800">
+          You have marked your attendance.
+        </Text>
+      </HStack>
+    </Alert>
+  ) : (
+    <HStack alignItems="center">
+      <Alert status="info" mr={2}>
+        <HStack flexShrink={1} space={2} alignItems="center">
+          <Alert.Icon />
+          <Text fontSize="md" fontWeight="medium" color="coolGray.800">
+            Please wait, we are fetching details
+          </Text>
+          <Spinner size="sm" color="#F2796B" />
+        </HStack>
+      </Alert>
+    </HStack>
   );
 };
 
-const styles = StyleSheet.create({
-  button: {
-    alignSelf: 'center',
-    padding: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-    borderWidth: 1,
-    borderColor: '#0984e3',
-    borderRadius: 5,
-  },
+// const styles = StyleSheet.create({
+//   button: {
+//     alignSelf: 'center',
+//     padding: 12,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     backgroundColor: 'transparent',
+//     borderWidth: 1,
+//     borderColor: '#0984e3',
+//     borderRadius: 5,
+//   },
 
-  textButton: {
-    color: '#0984e3',
-    fontWeight: '700',
-    fontSize: 16,
-  },
-});
+//   textButton: {
+//     color: '#0984e3',
+//     fontWeight: '700',
+//     fontSize: 16,
+//   },
+// });
 
 export default LocationInfo;

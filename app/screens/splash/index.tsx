@@ -13,9 +13,9 @@ export const Splash = ({navigation}: any) => {
   const handleGetToken = async () => {
     const dataToken = await AsyncStorage.getItem('AccessToken');
     if (!dataToken) {
-      navigation.replace('Login');
+      navigation.navigate('Login');
     } else {
-      navigation.replace('Home');
+      navigation.navigate('Home');
     }
   };
 

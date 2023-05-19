@@ -58,7 +58,7 @@ export const Login = ({navigation}: any) => {
 
       setTimeout(() => {
         setLoading(false);
-        navigation.replace('Home');
+        navigation.navigate('Home');
       }, 3000);
     }
 
