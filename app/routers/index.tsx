@@ -5,6 +5,7 @@ import {Login} from '../screens/auth/login';
 import {Splash} from '../screens/splash';
 import {Home} from '../screens/home';
 import Attendance from '../screens/attendance';
+import Profile from '../screens/profile';
 
 const Stack = createNativeStackNavigator();
 
@@ -15,6 +16,7 @@ export const Routers = () => {
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Attendance" component={Attendance} />
+      <Stack.Screen name="Profile" component={Profile} />
     </Stack.Navigator>
   );
 };

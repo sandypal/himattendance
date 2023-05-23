@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {getDistance} from 'geolib';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useToast} from 'react-native-toast-notifications';
 import {Button, Text, Spinner, Alert, HStack} from 'native-base';
 
@@ -16,38 +16,49 @@ const LocationInfo = ({latitude, longitude}: LocationProp) => {
 
   const [todayAttendance, setTodayAttendance] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [ip, setIp] = useState('');
+
+  useEffect(() => {
+    fetchUserIp();
+  }, []);
 
   const fetchUserIp = async () =>
     await axios
       .get('https://api.ipify.org?format=json')
       .then(response => {
-        return response.data.ip;
+        setIp(response.data.ip);
       })
       .catch(error => {
         console.error(error);
-        return false;
+        setIp('error');
       });
 
   const onMarkAttendance = async () => {
-    let id = toast.show('Wait we are marking attendance.', {
-      type: 'warning',
-      placement: 'top',
-      duration: 4000,
-      animationType: 'slide-in',
-    });
-
     setLoading(true);
-    const ip = await fetchUserIp();
 
-    if (ip === '223.178.212.19') {
+    if (ip === '223.178.212.166') {
       setTodayAttendance(true);
       setLoading(false);
-      toast.update(id, 'Attendance for today is marked.', {
+      toast.show('Attendance for today is marked.', {
         type: 'success',
+        placement: 'top',
+        duration: 4000,
+        animationType: 'slide-in',
       });
-    } else {
-      toast.update(id, 'You are not connected to company wifi.', {
+    } else if (ip === 'error' || ip === undefined) {
+      toast.show('Server is busy. Please retry in a while.', {
         type: 'danger',
+        placement: 'top',
+        duration: 4000,
+        animationType: 'slide-in',
+      });
+      setLoading(false);
+    } else {
+      toast.show('You are not connected to company wifi.', {
+        type: 'danger',
+        placement: 'top',
+        duration: 4000,
+        animationType: 'slide-in',
       });
       setLoading(false);
     }

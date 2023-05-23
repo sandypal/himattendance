@@ -95,7 +95,7 @@ export const Home = ({navigation}: any) => {
                 Welcome back
               </Text>
               <Text fontSize="3xl" fontWeight="bold">
-                John Carter
+                Deno Carter
               </Text>
               <Text>{dayjs().format('DD-MMMM-YYYY')}</Text>
             </Box>
@@ -118,7 +118,9 @@ export const Home = ({navigation}: any) => {
                   </Pressable>
                 );
               }}>
-              <Menu.Item>Profile</Menu.Item>
+              <Menu.Item onPress={() => navigation.navigate('Profile')}>
+                Profile
+              </Menu.Item>
               <Menu.Item>Setting</Menu.Item>
               <Button
                 size="md"
@@ -137,55 +139,37 @@ export const Home = ({navigation}: any) => {
           />
           <HStack justifyContent="space-between" my={5}>
             <Square p={2} size="170px" bg="white" shadow={1} rounded="md">
-              <Text fontSize="xl" fontWeight="bold">
-                Working Days
-              </Text>
-              <Text fontSize="lg" fontWeight="medium">
+              <Text fontSize="4xl" fontWeight="bold">
                 23
               </Text>
+              <Text fontSize="md" fontWeight="normal">
+                Working Days
+              </Text> 
             </Square>
             <Square p={2} size="170px" bg="white" shadow={1} rounded="md">
-              <Text fontSize="xl" fontWeight="bold">
-                Attendance
-              </Text>
-              <Text fontSize="lg" fontWeight="medium">
+              <Text fontSize="4xl" fontWeight="bold">
                 12
+              </Text>
+              <Text fontSize="md" fontWeight="normal">
+                Attendance
               </Text>
             </Square>
           </HStack>
           <HStack justifyContent="space-between">
             <Square p={2} size="170px" bg="white" shadow={1} rounded="md">
-              <Text fontSize="xl" fontWeight="bold">
-                Leaves Taken
-              </Text>
-              <Text fontSize="lg" fontWeight="medium">
+              <Text fontSize="4xl" fontWeight="bold">
                 1
               </Text>
-            </Square>
-            <Square p={2} size="170px" bg="white" shadow={1} rounded="md">
-              <Text fontSize="xl" fontWeight="bold">
-                Leaves Remained
-              </Text>
-              <Text fontSize="lg" fontWeight="medium">
-                2
-              </Text>
-            </Square>
-          </HStack>
-          <HStack justifyContent="space-between" mt={5}>
-            <Square p={2} size="170px" bg="white" shadow={1} rounded="md">
-              <Text fontSize="xl" fontWeight="bold">
+              <Text fontSize="md" fontWeight="normal">
                 Leaves Taken
               </Text>
-              <Text fontSize="lg" fontWeight="medium">
-                1
-              </Text>
             </Square>
             <Square p={2} size="170px" bg="white" shadow={1} rounded="md">
-              <Text fontSize="xl" fontWeight="bold">
-                Leaves Remained
-              </Text>
-              <Text fontSize="lg" fontWeight="medium">
+              <Text fontSize="4xl" fontWeight="bold">
                 2
+              </Text>
+              <Text fontSize="md" fontWeight="normal">
+                Leaves Remained
               </Text>
             </Square>
           </HStack>
